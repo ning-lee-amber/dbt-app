@@ -38,8 +38,10 @@ self.addEventListener('fetch', (event) => {
         if (res.ok) {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
+          return res;
         }
-        return res;
+        // Server error (e.g. a brief Cloudflare 5xx): prefer the cached copy if we have one.
+        return caches.match(req).then((hit) => hit || res);
       })
       .catch(() => caches.match(req).then((hit) => hit || caches.match('/index.html')))
   );
