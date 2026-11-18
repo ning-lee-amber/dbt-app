@@ -7,6 +7,10 @@ const empty = () => ({
   custom: {},     // { handoutId: { blockKey: [text] } }  — 「其他」 items the user added
   urgeCards: [],  // 衝動卡（痛苦耐受作業單 3）
   crisisLogs: [], // 危機紀錄（痛苦耐受作業單 1）
+  emotionLogs: [], // 情緒紀錄（情緒調節作業單 2、4a）
+  changes: [],    // 改變情緒（情緒調節作業單 5–8）
+  checkins: {},   // 每日打卡 { 'YYYY-MM-DD': { moodAM, moodPM, pl, eat, sub, bed, wake, exMin } }
+  fills: {},      // 講義上的填寫欄 { handoutId: { key: { index: text } } }
   lastExport: null,
 });
 
@@ -105,6 +109,44 @@ export function deleteCrisisLog(id) {
   save();
 }
 
+// ---- generic collections (emotionLogs, changes) ----
+export const items = (coll) => [...(state[coll] || [])].sort((a, b) => (a.at < b.at ? 1 : -1));
+export const item = (coll, id) => (state[coll] || []).find((x) => x.id === id);
+export function saveItem(coll, obj) {
+  state[coll] ??= [];
+  const i = state[coll].findIndex((x) => x.id === obj.id);
+  if (i >= 0) state[coll][i] = obj;
+  else state[coll].push(obj);
+  save();
+}
+export function deleteItem(coll, id) {
+  state[coll] = (state[coll] || []).filter((x) => x.id !== id);
+  save();
+}
+
+// ---- daily check-in ----
+export const dayKey = (d = new Date()) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+export const checkin = (key) => state.checkins[key] || {};
+export function setCheckin(key, field, value) {
+  state.checkins[key] ??= {};
+  if (value === '' || value == null) delete state.checkins[key][field];
+  else state.checkins[key][field] = value;
+  if (!Object.keys(state.checkins[key]).length) delete state.checkins[key];
+  save();
+}
+export const checkinDays = () => Object.keys(state.checkins).sort().reverse();
+
+// ---- fill-in fields on handouts ----
+export const fill = (hid, key, i) => state.fills[hid]?.[key]?.[i] || '';
+export function setFill(hid, key, i, text) {
+  state.fills[hid] ??= {};
+  state.fills[hid][key] ??= {};
+  if (text) state.fills[hid][key][i] = text;
+  else delete state.fills[hid][key][i];
+  save();
+}
+
 // ---- backup ----
 export function exportJSON() {
   state.lastExport = new Date().toISOString();
@@ -123,5 +165,8 @@ export function importJSON(text) {
 }
 
 export function counts() {
-  return { cards: state.urgeCards.length, logs: state.crisisLogs.length };
+  return {
+    cards: state.urgeCards.length,
+    logs: state.crisisLogs.length + state.emotionLogs.length + state.changes.length,
+  };
 }

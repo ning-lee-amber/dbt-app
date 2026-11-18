@@ -1,4 +1,4 @@
-import { h, card, pageHead, checkRow, back, todayLabel, fmtDate, confirmBar, toast } from './dom.js';
+import { h, put, card, pageHead, checkRow, back, todayLabel, fmtDate, confirmBar, toast, slider } from './dom.js';
 import { UNITS, HANDOUTS, handoutById, ACCEPTS, SENSES, IMPROVE, SOURCE } from './content.js';
 import * as store from './store.js';
 
@@ -44,11 +44,27 @@ export function today() {
   const st = store.getState();
   const needBackup = (cards || logs) && (!st.lastExport || Date.now() - new Date(st.lastExport) > 30 * 864e5);
 
+  const key = store.dayKey();
+  const ci = store.checkin(key);
+  const done = (f) => ci[f] != null && ci[f] !== '';
+  const please = [['PL', 'pl'], ['E 飲食', 'eat'], ['A 物質', 'sub'], ['S 睡眠', 'wake'], ['E 運動', 'exMin']];
+
   return {
     tab: 'today', title: '',
     node: h('div', {},
       pageHead('今天', todayLabel()),
       card(h('p', { class: 'quote', text: phrase })),
+      card(
+        h('div', { class: 'row' }, h('h3', { text: '每日打卡' }), h('a', { class: 'small', href: '#/checkin', text: '填寫 ›' })),
+        slider(new Date().getHours() < 15 ? '早上的心情' : '晚上的心情', new Date().getHours() < 15 ? ci.moodAM : ci.moodPM,
+          (v) => store.setCheckin(key, new Date().getHours() < 15 ? 'moodAM' : 'moodPM', v)),
+        h('a', { class: 'please', href: '#/checkin' }, please.map(([label, f]) => h('span', { class: done(f) ? 'on' : '', text: label }))),
+      ),
+      card(
+        h('h3', { text: '情緒' }),
+        rowLink('#/emotion/new', '記錄一個情緒', '選情緒、評強度、寫下發生什麼事'),
+        rowLink('#/change/new', '我想改變一個情緒', '核對事實 → 相反行動或問題解決'),
+      ),
       card(
         h('h3', { text: '危機時用的工具' }),
         rowLink('#/urge', '我的衝動卡', '衝動來之前先寫好', cards),
@@ -78,6 +94,14 @@ export function tools() {
     node: h('div', {},
       pageHead('工具'),
       card(
+        h('h3', { text: '情緒調節' }),
+        rowLink('#/change/new', '改變情緒', '核對事實 → 決定 → 相反行動或問題解決'),
+        rowLink('#/emotion/new', '記錄情緒', '快速版，或完整的觀察與描述情緒'),
+        rowLink('#/checkin', '每日打卡', '心情與 PLEASE'),
+        rowLink('#/handouts/er-4a', '關於情緒的迷思', '寫下你的挑戰'),
+        rowLink('#/handouts/er-22', '對當下情緒了了分明', '放下受苦情緒'),
+      ),
+      card(
         h('h3', { text: '危機生存技巧' }),
         rowLink('#/crisis/stop', 'STOP 立即停止', '停止動作・退後一步・客觀觀察・帶著覺察行事'),
         rowLink('#/urge', '優缺點分析', '我的衝動卡'),
@@ -104,7 +128,7 @@ export function handouts() {
 
   function draw(q) {
     q = q.trim();
-    list.replaceChildren(...UNITS.map((u) => {
+    put(list, ...UNITS.map((u) => {
       const items = HANDOUTS.filter((x) => x.unit === u.id && (!q || x.title.includes(q) || `${u.name}${x.no}`.includes(q)));
       if (q && !items.length) return null;
       const d = h('details', { class: 'unit' },
@@ -113,7 +137,7 @@ export function handouts() {
           h('li', {}, h('a', { href: `#/handouts/${x.id}` },
             h('em', { text: x.no }), h('span', { text: x.title }),
             x.blocks ? null : h('small', { class: 'tag', text: '整理中' }))))));
-      if (q || u.id === 'dt') d.open = true;
+      if (q) d.open = true;
       return d;
     }));
   }
@@ -172,6 +196,12 @@ function checkBlock(hid, b) {
   return box;
 }
 
+// Inside a collapsible card, nested cards become plain sections.
+const unwrapCard = (el) => {
+  if (el.classList?.contains('card')) el.className = 'sub-block';
+  return el;
+};
+
 export function renderBlocks(hid, blocks) {
   const out = [];
   let loose = null; // consecutive text blocks share one card
@@ -193,6 +223,18 @@ export function renderBlocks(hid, blocks) {
         out.push(card(...b.items.map((it) =>
           h('div', { class: 'acro' }, h('span', { class: 'letter', text: it.l }),
             h('div', {}, h('b', { text: it.name }), h('small', { text: it.en }), h('p', { text: it.text }))))));
+        break;
+      case 'details':
+        flush();
+        out.push(h('details', { class: 'card fold' }, h('summary', { text: b.title }), renderBlocks(hid, b.blocks).map(unwrapCard)));
+        break;
+      case 'myths':
+        flush();
+        out.push(...b.items.map(([myth, sample], i) => card(
+          h('p', { class: 'myth', text: `${i + 1}. ${myth}` }),
+          h('p', { class: 'muted small', text: `範例挑戰：${sample}` }),
+          h('textarea', { rows: 2, placeholder: '我的挑戰：', value: store.fill(hid, b.key, i),
+            oninput: (e) => store.setFill(hid, b.key, i, e.target.value) }))));
         break;
       case 'table':
         flush();
@@ -320,7 +362,7 @@ export function about() {
         h('p', { text: '這個 APP 是學習和練習 DBT 技巧的輔助工具，不能取代專業的治療。' }),
         h('p', { text: '你填寫的所有內容只存在這支手機上，不會上傳到任何伺服器，也沒有任何追蹤或分析程式。' }),
       ),
-      card(h('p', { class: 'muted small', text: '版本：第一階段（危機生存技巧）' })),
+      card(h('p', { class: 'muted small', text: '版本：第二階段（危機生存技巧、情緒調節）' })),
     ),
   };
 }

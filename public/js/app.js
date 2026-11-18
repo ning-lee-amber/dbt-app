@@ -3,12 +3,19 @@ import { requestPersist } from './store.js';
 import * as pages from './pages.js';
 import * as forms from './forms.js';
 import * as crisis from './crisis.js';
+import * as emo from './emotion.js';
 
 const routes = [
   [/^#\/today$/, pages.today],
   [/^#\/records$/, forms.records],
   [/^#\/records\/new$/, () => forms.logForm(null)],
   [/^#\/records\/([\w-]+)$/, (m) => forms.logForm(m[1])],
+  [/^#\/emotion\/new(\?full=1)?$/, (m) => emo.emotionForm(null, !!m[1])],
+  [/^#\/emotion\/([\w-]+)$/, (m) => emo.emotionForm(m[1])],
+  [/^#\/change\/new(?:\?log=([\w-]+))?$/, (m) => emo.changeFlow(null, m[1])],
+  [/^#\/change\/([\w-]+)$/, (m) => emo.changeFlow(m[1])],
+  [/^#\/checkin$/, () => emo.checkinPage(null)],
+  [/^#\/checkin\/(\d{4}-\d{2}-\d{2})$/, (m) => emo.checkinPage(m[1])],
   [/^#\/tools$/, pages.tools],
   [/^#\/handouts$/, pages.handouts],
   [/^#\/handouts\/([\w-]+)$/, (m) => pages.handout(m[1])],

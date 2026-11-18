@@ -121,6 +121,67 @@ input[type=range] { width: 100%; accent-color: var(--accent); margin: 6px 0 0; }
 .seg.mini { margin: 0; gap: 2px; flex: none; }
 .seg.mini button { flex: none; padding: 6px 7px; font-size: 12px; border-color: var(--line); }
 
+/* chips, yes/no, wizard (phase 2) */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.chip {
+  border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 16px;
+  padding: 6px 12px; font: inherit; font-size: 14px; line-height: 1.4; cursor: pointer; text-align: left;
+}
+.chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.yn { display: flex; gap: 8px; margin: 6px 0 12px; }
+.yn button { flex: 1; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 12px; padding: 10px 0; font: inherit; cursor: pointer; }
+.yn button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.field-label.top, .top { margin-top: 12px; }
+.stepper { display: flex; gap: 4px; margin-bottom: 14px; }
+.stepper span { flex: 1; text-align: center; font-size: 12px; color: var(--muted); padding-top: 6px; border-top: 3px solid var(--line); }
+.stepper span.done { border-color: var(--accent-soft); }
+.stepper span.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.wiz-nav { display: flex; justify-content: space-between; gap: 10px; margin: 6px 0 16px; }
+.wiz-nav .btn { min-width: 110px; }
+.choice {
+  display: block; width: 100%; text-align: left; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--ink);
+  border-radius: 14px; padding: 14px 16px; margin-top: 10px; font: inherit; cursor: pointer;
+}
+.choice b { display: block; color: var(--accent); }
+.choice small { color: var(--muted); }
+.outcome { background: var(--bg); border-radius: 12px; padding: 12px; margin: 8px 0; }
+.outcome b { display: block; margin-bottom: 4px; }
+.ref { background: var(--bg); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; }
+.ref ul { margin-top: 0; }
+.rating.six button { padding: 9px 0; }
+.two { display: flex; gap: 10px; }
+.two .field { flex: 1; }
+input[type=time], input[type=number] {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 16px;
+  background: transparent; color: inherit;
+}
+.daynav { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 4px; }
+.please { display: flex; gap: 6px; margin-top: 10px; }
+.please span { flex: 1; text-align: center; font-size: 12px; padding: 6px 0; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); }
+.please span.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.quick { display: flex; gap: 8px; margin-bottom: 12px; }
+.quick .btn { flex: 1; padding: 11px 6px; font-size: 15px; }
+details.fold summary { cursor: pointer; font-weight: 600; list-style: none; }
+details.fold summary::-webkit-details-marker { display: none; }
+details.fold summary::after { content: ' ›'; color: var(--muted); }
+details.fold[open] summary { margin-bottom: 8px; }
+details.fold[open] summary::after { content: ' ⌄'; }
+.sub-block { padding: 6px 0; }
+.sub-block + .sub-block { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 12px; }
+.myth { font-weight: 600; margin-bottom: 4px; }
+.card textarea { margin-top: 8px; }
+.item { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+.item input[type=text] { flex: 1; min-width: 0; }
+.item input[type=checkbox] { flex: none; width: 20px; height: 20px; accent-color: var(--accent); }
+.stepitem { margin-bottom: 10px; }
+.stepitem input.sub { width: calc(100% - 28px); margin-left: 26px; font-size: 14px; padding: 7px 10px; }
+.pcbox { background: var(--bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.compare { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 8px 0 2px; }
+.compare span { color: var(--muted); font-size: 22px; }
+.big { font-size: 36px; font-weight: 600; }
+.row.ends.around { justify-content: space-around; }
+.quote { white-space: pre-line; }
+
 /* handouts */
 details.unit { border-bottom: 1px solid var(--line); }
 details.unit:last-child { border-bottom: none; }

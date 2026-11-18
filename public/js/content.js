@@ -12,6 +12,10 @@
 //   note   caution / small print{ t:'note', text }
 //   quote  centered emphasis    { t:'quote', text }
 //   link   button to a feature  { t:'link', label, to }
+//   details collapsible group   { t:'details', title, blocks }
+//   myths  myth + sample challenge + my own challenge { t:'myths', key, items:[[myth, sample]] }
+
+import { ER_CONTENT } from './content-er.js';
 
 export const UNITS = [
   { id: 'gen', name: '通用技巧', sub: '介紹與行為分析' },
@@ -382,7 +386,7 @@ export const HANDOUTS = UNITS.flatMap((u) =>
     unitName: u.name,
     no,
     title,
-    blocks: CONTENT[`${u.id}-${no}`] || null,
+    blocks: CONTENT[`${u.id}-${no}`] || ER_CONTENT[`${u.id}-${no}`] || null,
   }))
 );
 

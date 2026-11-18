@@ -1,24 +1,53 @@
-import { h, card, pageHead, checkRow, slider, back, fmtDate, uid, confirmBar, toast, go } from './dom.js';
+import { h, card, pageHead, checkRow, slider, back, fmtDate, uid, confirmBar, toast, go, chips } from './dom.js';
+import { emotionName } from './emotion.js';
 import { CRISIS_SKILLS, EFFECT_ANCHORS } from './content.js';
 import * as store from './store.js';
 
 // ---------- 記錄（危機紀錄，痛苦耐受作業單 1） ----------
 
+const PATH_NAME = { opposite: '相反行動', solve: '問題解決', act: '依情緒行動' };
+let recordFilter = 'all';
+
 export function records() {
-  const logs = store.crisisLogs();
+  const all = [
+    ...store.items('emotionLogs').map((l) => ({
+      type: 'emotion', at: l.at, to: `#/emotion/${l.id}`, tag: '情緒',
+      title: `${emotionName(l.emotion, l.word)}${l.intensity != null ? ` ${l.intensity}` : ''}`, sub: l.event,
+    })),
+    ...store.items('changes').map((c) => ({
+      type: 'change', at: c.at, to: `#/change/${c.id}`, tag: c.status === 'done' ? (PATH_NAME[c.path] || '改變情緒') : '未完成',
+      title: `改變${emotionName(c.emotion) || '情緒'}`, sub: c.event, right: `${c.pre ?? '—'} → ${c.post ?? '—'}`,
+    })),
+    ...store.crisisLogs().map((l) => ({
+      type: 'crisis', at: l.at, to: `#/records/${l.id}`, tag: '危機',
+      title: l.event || '（未填寫事件）', sub: l.skills?.length ? `${l.skills.length} 個技巧` : '', right: `${l.pre ?? '—'} → ${l.post ?? '—'}`,
+    })),
+  ].sort((a, b) => (a.at < b.at ? 1 : -1));
+
+  const list = h('div', {});
+  const draw = () => {
+    const shown = all.filter((x) => recordFilter === 'all' || x.type === recordFilter);
+    list.replaceChildren(shown.length
+      ? card(shown.map((x) => h('a', { class: 'rowlink', href: x.to },
+        h('div', {}, h('b', {}, x.title, h('span', { class: 'tag', text: x.tag })),
+          h('small', { text: [fmtDate(x.at), x.sub].filter(Boolean).join('・') })),
+        h('span', { class: 'chev', text: x.right || '›' }))))
+      : card(h('p', { class: 'muted', text: '還沒有紀錄。' })));
+  };
+  draw();
+
   return {
     tab: 'records', title: '',
     node: h('div', {},
       pageHead('記錄'),
-      h('a', { class: 'btn block', href: '#/records/new', text: '＋ 新增危機紀錄' }),
-      logs.length
-        ? card(h('h3', { text: '危機紀錄' }), logs.map((l) =>
-          h('a', { class: 'rowlink', href: `#/records/${l.id}` },
-            h('div', {}, h('b', { text: l.event || '（未填寫事件）' }),
-              h('small', { text: `${fmtDate(l.at)}${l.skills?.length ? '・' + l.skills.length + ' 個技巧' : ''}` })),
-            h('span', { class: 'chev', text: `${l.pre ?? '—'} → ${l.post ?? '—'}` }))))
-        : card(h('p', { class: 'muted', text: '還沒有紀錄。危機過後，可以在這裡記下發生了什麼、用了哪些技巧。' })),
-      h('p', { class: 'muted small center', text: '情緒紀錄、每日打卡等會在第二階段加入。' }),
+      h('div', { class: 'quick' },
+        h('a', { class: 'btn', href: '#/emotion/new', text: '記錄情緒' }),
+        h('a', { class: 'btn', href: '#/change/new', text: '改變情緒' }),
+        h('a', { class: 'btn ghost', href: '#/records/new', text: '危機紀錄' })),
+      chips([{ value: 'all', label: '全部' }, { value: 'emotion', label: '情緒' }, { value: 'change', label: '改變情緒' }, { value: 'crisis', label: '危機' }],
+        recordFilter, (v) => { recordFilter = v || 'all'; draw(); }, { single: true }),
+      list,
+      h('a', { class: 'btn ghost block', href: '#/checkin', text: '每日打卡' }),
     ),
   };
 }

@@ -18,6 +18,10 @@ export function h(tag, attrs = {}, ...children) {
   return el;
 }
 
+// Replace an element's children, flattening arrays and skipping null/false.
+export const put = (el, ...children) =>
+  el.replaceChildren(...children.flat(Infinity).filter((c) => c != null && c !== false));
+
 export const go = (hash) => {
   if (location.hash === hash) window.dispatchEvent(new HashChangeEvent('hashchange'));
   else location.hash = hash;
@@ -69,6 +73,48 @@ export function slider(label, value, onchange) {
     h('div', { class: 'row' }, h('span', { text: label }), num),
     input,
     h('div', { class: 'row ends' }, h('span', { text: '0' }), h('span', { text: '100' })));
+}
+
+// Tap-to-select chips. `selected` is an array that is mutated in place (multi) or a value (single).
+export function chips(options, selected, onchange, { single = false } = {}) {
+  const wrap = h('div', { class: 'chips' });
+  let cur = single ? selected : [...(selected || [])];
+  const draw = () => {
+    wrap.replaceChildren(...options.map((o) => {
+      const val = typeof o === 'string' ? o : o.value;
+      const label = typeof o === 'string' ? o : o.label;
+      const on = single ? cur === val : cur.includes(val);
+      return h('button', {
+        type: 'button', class: `chip${on ? ' on' : ''}`, text: label,
+        onclick: () => {
+          if (single) cur = cur === val ? null : val;
+          else cur = on ? cur.filter((x) => x !== val) : [...cur, val];
+          draw();
+          onchange(cur);
+        },
+      });
+    }));
+  };
+  draw();
+  return wrap;
+}
+
+// Labelled textarea / input.
+export const textField = (label, value, onchange, { rows = 3, placeholder = '' } = {}) =>
+  h('label', { class: 'field' }, label ? h('span', { text: label }) : null,
+    h('textarea', { rows, placeholder, value: value || '', oninput: (e) => onchange(e.target.value) }));
+
+export const inputField = (label, value, onchange, { type = 'text', placeholder = '', ...rest } = {}) =>
+  h('label', { class: 'field' }, label ? h('span', { text: label }) : null,
+    h('input', { type, placeholder, value: value ?? '', ...rest, oninput: (e) => onchange(e.target.value) }));
+
+// Yes / no pair of buttons.
+export function yesNo(value, onchange, labels = ['是', '否']) {
+  const btns = ['yes', 'no'].map((v, i) => h('button', {
+    type: 'button', class: value === v ? 'on' : '', text: labels[i],
+    onclick: () => { btns.forEach((b) => b.classList.toggle('on', b === btns[i])); onchange(v); },
+  }));
+  return h('div', { class: 'yn' }, btns);
 }
 
 // Back link.
