@@ -112,6 +112,13 @@ export function tools() {
         rowLink('#/checkin', '每日打卡', 'PLEASE'),
       ),
       card(
+        h('h3', { text: '行為分析與戒癮' }),
+        rowLink('#/chain/new', '鏈鎖分析', '做了無效行為之後：找出事件鏈'),
+        rowLink('#/missing/new', '遺漏環節分析', '沒做到該做的事：找出卡住的環節'),
+        rowLink('#/sober', '辯證式戒癮', '戒癮天數、戒癮計畫、減害計畫'),
+        rowLink('#/handouts/dt-11', '全然接納', '接納現實技巧'),
+      ),
+      card(
         h('h3', { text: '人際效能' }),
         rowLink('#/talk/new', '準備一場對話', '目標 → 存錢遊戲 → DEAR MAN 腳本 → 小抄 → 回顧'),
         rowLink('#/handouts/ie-2a', '人際效能的迷思', '寫下你的挑戰'),
@@ -142,7 +149,6 @@ export function tools() {
         rowLink('#/guide/muscle', '配對式肌肉放鬆', '16 個肌肉群，約 5 分鐘'),
         rowLink('#/guide/senses', '感官覺察', '29 個問題，約 4 分鐘'),
       ),
-      h('p', { class: 'muted small center', text: '其他單元的工具會在之後的階段陸續加入。' }),
     ),
   };
 }
@@ -301,6 +307,7 @@ export function me() {
     node: h('div', {},
       pageHead('我的'),
       card(
+        rowLink('#/charts', '趨勢圖表', '心情、睡眠、情緒強度的變化'),
         rowLink('#/me/toolbox', '我的工具箱', '危機模式會列出這裡的項目'),
         rowLink('#/urge', '我的衝動卡', '痛苦耐受作業單 3', cards),
         rowLink('#/me/backup', '備份與還原', '匯出或匯入你的紀錄'),
@@ -406,7 +413,7 @@ export function about() {
         h('p', { text: '這個 APP 是學習和練習 DBT 技巧的輔助工具，不能取代專業的治療。' }),
         h('p', { text: '你填寫的所有內容只存在這支手機上，不會上傳到任何伺服器，也沒有任何追蹤或分析程式。' }),
       ),
-      card(h('p', { class: 'muted small', text: '版本：第四階段（危機生存技巧、情緒調節、了了分明、人際效能）' })),
+      card(h('p', { class: 'muted small', text: '版本：第五階段（全部單元）' })),
     ),
   };
 }

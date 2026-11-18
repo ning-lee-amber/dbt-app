@@ -7,6 +7,7 @@ import * as emo from './emotion.js';
 import * as p3 from './phase3.js';
 import { oppositePage } from './opposite.js';
 import { talkPage } from './talk.js';
+import * as p5 from './phase5.js';
 
 const routes = [
   [/^#\/today$/, pages.today],
@@ -17,6 +18,10 @@ const routes = [
   [/^#\/emotion\/([\w-]+)$/, (m) => emo.emotionForm(m[1])],
   [/^#\/change\/new(?:\?log=([\w-]+))?$/, (m) => emo.changeFlow(null, m[1])],
   [/^#\/change\/([\w-]+)$/, (m) => emo.changeFlow(m[1])],
+  [/^#\/chain\/([\w-]+)$/, (m) => p5.chainPage(m[1])],
+  [/^#\/missing\/([\w-]+)$/, (m) => p5.missingPage(m[1])],
+  [/^#\/sober$/, p5.soberPage],
+  [/^#\/charts$/, p5.chartsPage],
   [/^#\/talk\/new(?:\?type=(\w+))?$/, (m) => talkPage(null, m[1])],
   [/^#\/talk\/([\w-]+)$/, (m) => talkPage(m[1])],
   [/^#\/opposite$/, () => oppositePage(null)],

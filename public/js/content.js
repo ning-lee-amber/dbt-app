@@ -18,6 +18,7 @@
 import { ER_CONTENT } from './content-er.js';
 import { MF_CONTENT } from './content-mf.js';
 import { IE_CONTENT } from './content-ie.js';
+import { GD_CONTENT } from './content-gd.js';
 
 export const UNITS = [
   { id: 'gen', name: '通用技巧', sub: '介紹與行為分析' },
@@ -388,7 +389,7 @@ export const HANDOUTS = UNITS.flatMap((u) =>
     unitName: u.name,
     no,
     title,
-    blocks: CONTENT[`${u.id}-${no}`] || ER_CONTENT[`${u.id}-${no}`] || MF_CONTENT[`${u.id}-${no}`] || IE_CONTENT[`${u.id}-${no}`] || null,
+    blocks: CONTENT[`${u.id}-${no}`] || ER_CONTENT[`${u.id}-${no}`] || MF_CONTENT[`${u.id}-${no}`] || IE_CONTENT[`${u.id}-${no}`] || GD_CONTENT[`${u.id}-${no}`] || null,
   }))
 );
 

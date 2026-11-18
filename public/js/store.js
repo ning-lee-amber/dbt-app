@@ -16,6 +16,9 @@ const empty = () => ({
   mastery: [],    // 建立自我掌控（情緒調節作業單 12、13）
   copeAhead: [],  // 預先因應（情緒調節作業單 12）
   talks: [],      // 準備一場對話（人際效能作業單 3–7）
+  chains: [],     // 鏈鎖分析（通用作業單 2）
+  missing: [],    // 遺漏環節分析（通用作業單 3）
+  sober: {},      // 辯證式戒癮（痛苦耐受作業單 13–18）
   fills: {},      // 講義上的填寫欄 { handoutId: { key: { index: text } } }
   lastExport: null,
 });
@@ -126,6 +129,11 @@ export function saveItem(coll, obj) {
   save();
 }
 export const where = (coll, fn) => (state[coll] || []).filter(fn);
+
+// Single objects (e.g. the sobriety tracker).
+export const obj = (key) => (state[key] ??= {});
+export function setObj(key, value) { state[key] = value; save(); }
+export const persist = () => save();
 export function deleteItem(coll, id) {
   state[coll] = (state[coll] || []).filter((x) => x.id !== id);
   save();

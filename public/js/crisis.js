@@ -30,7 +30,7 @@ const big = (to, title, sub) => h('a', { class: 'big-btn', href: to }, title, h(
 const menuLink = () => h('a', { class: 'crisis-back', href: '#/crisis', text: '‹ 回到選單' });
 
 // Countdown timer element.
-function timer(seconds, { startLabel = '開始計時', doneText = '時間到。' } = {}) {
+function timer(seconds, { startLabel = '開始計時', doneText = '時間到。', onDone = null } = {}) {
   let left = seconds, id = null;
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   const face = h('div', { class: 'timer-face', text: fmt(left) });
@@ -44,7 +44,7 @@ function timer(seconds, { startLabel = '開始計時', doneText = '時間到。'
     id = setInterval(() => {
       left -= 1;
       face.textContent = fmt(Math.max(left, 0));
-      if (left <= 0) { stop(); msg.textContent = doneText; btn.textContent = '再一次'; try { navigator.vibrate?.(300); } catch {} }
+      if (left <= 0) { stop(); msg.textContent = doneText; onDone?.(); btn.textContent = '再一次'; try { navigator.vibrate?.(300); } catch {} }
     }, 1000);
   });
   onLeave(stop);
@@ -211,7 +211,7 @@ export function hold() {
   const count = h('p', { class: 'dnote center' });
   const holder = h('div', {});
   const start = () => {
-    holder.replaceChildren(timer(300, { startLabel: '開始', doneText: '你撐過了五分鐘。' }));
+    holder.replaceChildren(timer(300, { startLabel: '開始', doneText: '你撐過了五分鐘。', onDone: () => { const s = store.obj('sober'); s.holds = (s.holds || 0) + 1; store.persist(); } }));
     holder.querySelector('button').click();
   };
   const again = h('button', { class: 'pill', type: 'button', text: '再撐五分鐘',
