@@ -391,7 +391,7 @@ export const HANDOUTS = UNITS.flatMap((u) =>
     title,
     blocks: CONTENT[`${u.id}-${no}`] || ER_CONTENT[`${u.id}-${no}`] || MF_CONTENT[`${u.id}-${no}`] || IE_CONTENT[`${u.id}-${no}`] || GD_CONTENT[`${u.id}-${no}`] || null,
   }))
-);
+).filter((x) => x.blocks); // 只列出有內容的講義（通用 2–4、了了分明 4b、4c、6 尚未提供）
 
 export const handoutById = (id) => HANDOUTS.find((x) => x.id === id);
 
