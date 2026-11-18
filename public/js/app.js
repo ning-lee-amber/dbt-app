@@ -5,6 +5,7 @@ import * as forms from './forms.js';
 import * as crisis from './crisis.js';
 import * as emo from './emotion.js';
 import * as p3 from './phase3.js';
+import { oppositePage } from './opposite.js';
 
 const routes = [
   [/^#\/today$/, pages.today],
@@ -15,6 +16,8 @@ const routes = [
   [/^#\/emotion\/([\w-]+)$/, (m) => emo.emotionForm(m[1])],
   [/^#\/change\/new(?:\?log=([\w-]+))?$/, (m) => emo.changeFlow(null, m[1])],
   [/^#\/change\/([\w-]+)$/, (m) => emo.changeFlow(m[1])],
+  [/^#\/opposite$/, () => oppositePage(null)],
+  [/^#\/opposite\/([\w-]+)$/, (m) => oppositePage(m[1])],
   [/^#\/checkin$/, () => emo.checkinPage(null)],
   [/^#\/checkin\/(\d{4}-\d{2}-\d{2})$/, (m) => emo.checkinPage(m[1])],
   [/^#\/tools$/, pages.tools],

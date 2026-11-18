@@ -192,6 +192,31 @@ details.fold[open] summary::after { content: ' ⌄'; }
 .block-link { display: block; margin-top: 12px; }
 .guide .pill.ghost { margin-top: 18px; }
 
+/* opposite action */
+.opp-cta {
+  display: block; background: var(--accent); color: var(--accent-ink); border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 12px;
+}
+.opp-cta b { display: block; font-size: 19px; }
+.opp-cta small { opacity: .85; font-size: 13px; }
+.card.opp-urge { border-color: var(--con); }
+.card.opp-urge h3 { color: var(--con); }
+.card.opp-do { border-color: var(--accent); background: var(--accent-soft); }
+.card.opp-do h3 { color: var(--accent); }
+.card.opp-do .chip { background: var(--card); }
+.card.opp-do .chip.on { background: var(--accent); color: var(--accent-ink); }
+.opp-arrow { text-align: center; color: var(--accent); font-weight: 600; margin: -4px 0 8px; }
+.opp-doing {
+  background: var(--accent); color: var(--accent-ink); border-radius: 20px; padding: 24px 20px; margin-top: 8px;
+}
+.opp-doing ul { font-size: 18px; line-height: 1.7; padding-left: 22px; margin: 12px 0; }
+.opp-doing li { margin: 8px 0; }
+.opp-label { opacity: .8; font-size: 14px; }
+.opp-big { font-size: 24px; font-weight: 600; margin: 6px 0 4px; }
+.opp-hint { opacity: .85; font-size: 14px; margin-bottom: 16px; }
+.opp-doing .btn { background: var(--accent-ink); color: var(--accent); }
+.opp-doing .btn.ghost { background: transparent; color: var(--accent-ink); border-color: rgba(255,255,255,.5); }
+
 /* handouts */
 details.unit { border-bottom: 1px solid var(--line); }
 details.unit:last-child { border-bottom: none; }

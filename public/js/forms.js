@@ -15,7 +15,7 @@ export function records() {
       title: `${emotionName(l.emotion, l.word)}${l.intensity != null ? ` ${l.intensity}` : ''}`, sub: l.event,
     })),
     ...store.items('changes').map((c) => ({
-      type: 'change', at: c.at, to: `#/change/${c.id}`, tag: c.status === 'done' ? (PATH_NAME[c.path] || '改變情緒') : '未完成',
+      type: 'change', at: c.at, to: c.quick ? `#/opposite/${c.id}` : `#/change/${c.id}`, tag: c.status === 'done' ? (c.quick ? '相反行動' : PATH_NAME[c.path] || '改變情緒') : '未完成',
       title: `改變${emotionName(c.emotion) || '情緒'}`, sub: c.event, right: `${c.pre ?? '—'} → ${c.post ?? '—'}`,
     })),
     ...store.items('practices').map((p) => ({

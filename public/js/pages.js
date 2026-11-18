@@ -55,6 +55,7 @@ export function today() {
     node: h('div', {},
       pageHead('今天', todayLabel()),
       card(h('p', { class: 'quote', text: phrase })),
+      h('a', { class: 'opp-cta', href: '#/opposite' }, h('b', { text: '相反行動' }), h('small', { text: '情緒不符合事實，或跟著做沒有幫助時：反過來做' })),
       card(
         h('div', { class: 'row' }, h('h3', { text: '每日打卡' }), h('a', { class: 'small', href: '#/checkin', text: '填寫 ›' })),
         slider(new Date().getHours() < 15 ? '早上的心情' : '晚上的心情', new Date().getHours() < 15 ? ci.moodAM : ci.moodPM,
@@ -112,6 +113,7 @@ export function tools() {
       ),
       card(
         h('h3', { text: '情緒調節' }),
+        rowLink('#/opposite', '相反行動', '選情緒 → 看衝動 → 反過來做'),
         rowLink('#/change/new', '改變情緒', '核對事實 → 決定 → 相反行動或問題解決'),
         rowLink('#/emotion/new', '記錄情緒', '快速版，或完整的觀察與描述情緒'),
         rowLink('#/handouts/er-4a', '關於情緒的迷思', '寫下你的挑戰'),

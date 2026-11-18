@@ -202,13 +202,13 @@ export const ER_CONTENT = {
       '步驟六　做出與行動衝動完全相反的行動。',
       '步驟七　持續做出與情緒衝動相反的行動直到情緒改變。',
     ] },
-    { t: 'link', label: '開始練習相反行動', to: '#/change/new' },
+    { t: 'link', label: '開始練習相反行動', to: '#/opposite' },
   ],
   'er-11': [
     { t: 'p', text: '點開每個情緒：它在什麼時候符合事實，以及當它不符合事實或不有效時，該做的相反行動與完全相反的行動。' },
     ...EMOTIONS.filter((e) => e.opp.length).map(oppDetails),
     shameGuiltDetails,
-    { t: 'link', label: '開始練習相反行動', to: '#/change/new' },
+    { t: 'link', label: '開始練習相反行動', to: '#/opposite' },
   ],
   'er-12': [
     { t: 'steps', items: [
