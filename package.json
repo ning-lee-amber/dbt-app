@@ -1,0 +1,14 @@
+{
+  "name": "dbt-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node scripts/serve.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "deploy": "wrangler pages deploy --branch main --commit-dirty=true"
+  },
+  "devDependencies": {
+    "wrangler": "^4.158.0"
+  }
+}
