@@ -182,6 +182,16 @@ details.fold[open] summary::after { content: ' ⌄'; }
 .row.ends.around { justify-content: space-around; }
 .quote { white-space: pre-line; }
 
+/* phase 3 */
+.seesaw { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.seesaw:last-child { border-bottom: none; }
+.row.ends.ink { color: var(--ink); font-size: 13px; }
+.logrow { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.logrow:last-child { border-bottom: none; }
+.logrow small { color: var(--muted); white-space: nowrap; }
+.block-link { display: block; margin-top: 12px; }
+.guide .pill.ghost { margin-top: 18px; }
+
 /* handouts */
 details.unit { border-bottom: 1px solid var(--line); }
 details.unit:last-child { border-bottom: none; }

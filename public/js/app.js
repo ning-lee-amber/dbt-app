@@ -4,6 +4,7 @@ import * as pages from './pages.js';
 import * as forms from './forms.js';
 import * as crisis from './crisis.js';
 import * as emo from './emotion.js';
+import * as p3 from './phase3.js';
 
 const routes = [
   [/^#\/today$/, pages.today],
@@ -26,7 +27,14 @@ const routes = [
   [/^#\/urge$/, forms.urgeList],
   [/^#\/urge\/new$/, () => forms.urgeForm(null)],
   [/^#\/urge\/([\w-]+)$/, (m) => forms.urgeForm(m[1])],
-  [/^#\/guide\/(muscle|senses)$/, (m) => crisis.guide(m[1], false)],
+  [/^#\/guide\/(muscle|senses|wise3|loving)$/, (m) => crisis.guide(m[1], false)],
+  [/^#\/practice\/new(?:\?skill=(.+))?$/, (m) => p3.practiceForm(null, m[1] && decodeURIComponent(m[1]))],
+  [/^#\/practice\/([\w-]+)$/, (m) => p3.practiceForm(m[1])],
+  [/^#\/balance(?:\/(\d{4}-\d{2}-\d{2}))?$/, (m) => p3.balancePage(m[1])],
+  [/^#\/positive$/, p3.positivePage],
+  [/^#\/values$/, p3.valuesPage],
+  [/^#\/values\/([\w-]+)$/, (m) => p3.goalPage(m[1])],
+  [/^#\/abc$/, p3.abcPage],
   [/^#\/crisis$/, crisis.entry],
   [/^#\/crisis\/stop$/, crisis.stop],
   [/^#\/crisis\/tip$/, crisis.tip],

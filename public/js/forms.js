@@ -18,6 +18,10 @@ export function records() {
       type: 'change', at: c.at, to: `#/change/${c.id}`, tag: c.status === 'done' ? (PATH_NAME[c.path] || '改變情緒') : '未完成',
       title: `改變${emotionName(c.emotion) || '情緒'}`, sub: c.event, right: `${c.pre ?? '—'} → ${c.post ?? '—'}`,
     })),
+    ...store.items('practices').map((p) => ({
+      type: 'practice', at: p.at, to: `#/practice/${p.id}`, tag: '了了分明',
+      title: p.skills.join('、'), sub: p.situation, right: p.rating ? `${p.rating}/5` : '›',
+    })),
     ...store.crisisLogs().map((l) => ({
       type: 'crisis', at: l.at, to: `#/records/${l.id}`, tag: '危機',
       title: l.event || '（未填寫事件）', sub: l.skills?.length ? `${l.skills.length} 個技巧` : '', right: `${l.pre ?? '—'} → ${l.post ?? '—'}`,
@@ -44,7 +48,7 @@ export function records() {
         h('a', { class: 'btn', href: '#/emotion/new', text: '記錄情緒' }),
         h('a', { class: 'btn', href: '#/change/new', text: '改變情緒' }),
         h('a', { class: 'btn ghost', href: '#/records/new', text: '危機紀錄' })),
-      chips([{ value: 'all', label: '全部' }, { value: 'emotion', label: '情緒' }, { value: 'change', label: '改變情緒' }, { value: 'crisis', label: '危機' }],
+      chips([{ value: 'all', label: '全部' }, { value: 'emotion', label: '情緒' }, { value: 'change', label: '改變情緒' }, { value: 'practice', label: '了了分明' }, { value: 'crisis', label: '危機' }],
         recordFilter, (v) => { recordFilter = v || 'all'; draw(); }, { single: true }),
       list,
       h('a', { class: 'btn ghost block', href: '#/checkin', text: '每日打卡' }),

@@ -243,13 +243,47 @@ function senseSteps() {
   return steps;
 }
 
+// 了了分明講義 9a 第 8 項：三分鐘智慧心練習
+function wise3Steps() {
+  return [
+    { text: '找個舒適的姿勢，挺直但放鬆。', sub: '準備開始', sec: 6 },
+    { text: '問自己：「我現在經驗到什麼？有什麼想法？」', sub: '第一分鐘　覺察', sec: 20 },
+    { text: '問自己：「我的感受和身體感覺是什麼？」', sub: '第一分鐘　覺察', sec: 20 },
+    { text: '告訴自己：「沒關係，現在就是這麼一回事。」', sub: '第一分鐘　覺察', sec: 20 },
+    { text: '把注意力集中在呼吸上。吸氣……吐氣……', sub: '第二分鐘　呼吸', sec: 30 },
+    { text: '讓呼吸像船錨，分心了就輕輕回到呼吸。', sub: '第二分鐘　呼吸', sec: 30 },
+    { text: '把覺察擴展到整個身體，連同姿勢和臉部表情。', sub: '第三分鐘　擴展', sec: 30 },
+    { text: '帶著這份覺察，回到你原本在做的事。', sub: '第三分鐘　擴展', sec: 30 },
+    { text: '做完了。可以記錄這次練習。', sub: '結束', sec: 0 },
+  ];
+}
+
+// 了了分明講義 8：仁慈關愛
+function lovingSteps() {
+  const steps = [{ text: '坐、站或躺都可以。深呼吸幾次，攤開手掌。', sub: '準備開始', sec: 10 }];
+  const circles = [['自己', '我'], ['一個你愛的人', '你'], ['一位朋友', '你'], ['一個讓你生氣的人', '你'], ['一個難相處的人', '你'], ['所有的眾生', '你們']];
+  for (const [who, p] of circles) {
+    steps.push({ text: `讓${who}進到你的心裡。`, sub: who, sec: 8 });
+    for (const w of ['快樂', '平安', '健康', '安全']) steps.push({ text: `願${p}${w}。`, sub: who, sec: 6 });
+  }
+  steps.push({ text: '分心了也沒關係，溫和地把心帶回來。做完了。', sub: '結束', sec: 0 });
+  return steps;
+}
+
 export function guide(name, inCrisis) {
   if (inCrisis) {
     ensureSession();
     markSkill(name === 'muscle' ? SK_TIP : SK_IMPROVE);
   }
-  const steps = name === 'muscle' ? muscleSteps() : senseSteps();
-  const title = name === 'muscle' ? '配對式肌肉放鬆' : '感官覺察';
+  const G = {
+    muscle: ['配對式肌肉放鬆', muscleSteps, '#/tools'],
+    senses: ['感官覺察', senseSteps, '#/tools'],
+    wise3: ['三分鐘智慧心練習', wise3Steps, '#/practice/new?skill=智慧心'],
+    loving: ['仁慈關愛', lovingSteps, '#/practice/new?skill=仁慈關愛'],
+  }[name];
+  const steps = G[1]();
+  const title = G[0];
+  const doneLink = name === 'wise3' || name === 'loving' ? G[2] : null;
   let i = 0, id = null, left = 0;
   const sub = h('p', { class: 'guide-sub' });
   const text = h('p', { class: 'guide-text' });
@@ -286,7 +320,8 @@ export function guide(name, inCrisis) {
 
   const body = h('div', { class: 'guide' },
     h('p', { class: 'guide-title', text: title }), bar, sub, text,
-    h('div', { class: 'guide-ctrl' }, prev, play, nextB));
+    h('div', { class: 'guide-ctrl' }, prev, play, nextB),
+    doneLink ? h('a', { class: 'pill ghost', href: doneLink, text: '記錄這次練習' }) : null);
 
   if (inCrisis) return view(shell(menuLink(), body));
   return {

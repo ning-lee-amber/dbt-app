@@ -1,6 +1,7 @@
 import { h, put, card, pageHead, checkRow, back, todayLabel, fmtDate, confirmBar, toast, slider } from './dom.js';
 import { UNITS, HANDOUTS, handoutById, ACCEPTS, SENSES, IMPROVE, SOURCE } from './content.js';
 import * as store from './store.js';
+import { todayABC } from './phase3.js';
 
 // ---------- shared: my picked items from the crisis handouts ----------
 
@@ -60,6 +61,7 @@ export function today() {
           (v) => store.setCheckin(key, new Date().getHours() < 15 ? 'moodAM' : 'moodPM', v)),
         h('a', { class: 'please', href: '#/checkin' }, please.map(([label, f]) => h('span', { class: done(f) ? 'on' : '', text: label }))),
       ),
+      todayABC(rowLink),
       card(
         h('h3', { text: '情緒' }),
         rowLink('#/emotion/new', '記錄一個情緒', '選情緒、評強度、寫下發生什麼事'),
@@ -94,10 +96,24 @@ export function tools() {
     node: h('div', {},
       pageHead('工具'),
       card(
+        h('h3', { text: '了了分明' }),
+        rowLink('#/practice/new', '記錄一次練習', '觀察、描述、參與、不評斷、專一、有效'),
+        rowLink('#/guide/wise3', '三分鐘智慧心練習', '覺察・呼吸・擴展'),
+        rowLink('#/guide/loving', '仁慈關愛', '從自己開始，擴展到所有眾生'),
+        rowLink('#/balance', '行中庸之道', '今天的平衡（蹺蹺板）'),
+        rowLink('#/handouts/mf-4a', '練習觀察的方法', '回歸感官'),
+      ),
+      card(
+        h('h3', { text: '減少情緒心的脆弱性（ABC PLEASE）' }),
+        rowLink('#/positive', '今天的一件好事', '累積正向情緒（短期）'),
+        rowLink('#/values', '價值觀與目標', '累積正向情緒（長期）'),
+        rowLink('#/abc', '建立自我掌控與預先因應', 'B 與 C'),
+        rowLink('#/checkin', '每日打卡', 'PLEASE'),
+      ),
+      card(
         h('h3', { text: '情緒調節' }),
         rowLink('#/change/new', '改變情緒', '核對事實 → 決定 → 相反行動或問題解決'),
         rowLink('#/emotion/new', '記錄情緒', '快速版，或完整的觀察與描述情緒'),
-        rowLink('#/checkin', '每日打卡', '心情與 PLEASE'),
         rowLink('#/handouts/er-4a', '關於情緒的迷思', '寫下你的挑戰'),
         rowLink('#/handouts/er-22', '對當下情緒了了分明', '放下受苦情緒'),
       ),
@@ -362,7 +378,7 @@ export function about() {
         h('p', { text: '這個 APP 是學習和練習 DBT 技巧的輔助工具，不能取代專業的治療。' }),
         h('p', { text: '你填寫的所有內容只存在這支手機上，不會上傳到任何伺服器，也沒有任何追蹤或分析程式。' }),
       ),
-      card(h('p', { class: 'muted small', text: '版本：第二階段（危機生存技巧、情緒調節）' })),
+      card(h('p', { class: 'muted small', text: '版本：第三階段（危機生存技巧、情緒調節、了了分明）' })),
     ),
   };
 }

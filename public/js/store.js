@@ -10,6 +10,11 @@ const empty = () => ({
   emotionLogs: [], // 情緒紀錄（情緒調節作業單 2、4a）
   changes: [],    // 改變情緒（情緒調節作業單 5–8）
   checkins: {},   // 每日打卡 { 'YYYY-MM-DD': { moodAM, moodPM, pl, eat, sub, bed, wake, exMin } }
+  practices: [],  // 了了分明練習（了了分明作業單 4、5、6、7、10）
+  positives: [],  // 正向活動（情緒調節作業單 10）
+  goals: [],      // 價值觀 → 目標 → 步驟（情緒調節作業單 11、11a、11b）
+  mastery: [],    // 建立自我掌控（情緒調節作業單 12、13）
+  copeAhead: [],  // 預先因應（情緒調節作業單 12）
   fills: {},      // 講義上的填寫欄 { handoutId: { key: { index: text } } }
   lastExport: null,
 });
@@ -119,6 +124,7 @@ export function saveItem(coll, obj) {
   else state[coll].push(obj);
   save();
 }
+export const where = (coll, fn) => (state[coll] || []).filter(fn);
 export function deleteItem(coll, id) {
   state[coll] = (state[coll] || []).filter((x) => x.id !== id);
   save();

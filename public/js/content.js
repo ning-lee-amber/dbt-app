@@ -16,6 +16,7 @@
 //   myths  myth + sample challenge + my own challenge { t:'myths', key, items:[[myth, sample]] }
 
 import { ER_CONTENT } from './content-er.js';
+import { MF_CONTENT } from './content-mf.js';
 
 export const UNITS = [
   { id: 'gen', name: '通用技巧', sub: '介紹與行為分析' },
@@ -386,7 +387,7 @@ export const HANDOUTS = UNITS.flatMap((u) =>
     unitName: u.name,
     no,
     title,
-    blocks: CONTENT[`${u.id}-${no}`] || ER_CONTENT[`${u.id}-${no}`] || null,
+    blocks: CONTENT[`${u.id}-${no}`] || ER_CONTENT[`${u.id}-${no}`] || MF_CONTENT[`${u.id}-${no}`] || null,
   }))
 );
 
