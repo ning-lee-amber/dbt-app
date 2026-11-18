@@ -1,6 +1,6 @@
 // Service worker: keeps the app usable offline (crisis tools must open without a connection).
 // Network first, so a new deploy shows up right away when online; cache as the fallback.
-const CACHE = 'dbt-app-v4';
+const CACHE = 'dbt-app-v5';
 const SHELL = [
   '/',
   '/index.html',
@@ -18,6 +18,8 @@ const SHELL = [
   '/js/content-mf.js',
   '/js/phase3.js',
   '/js/opposite.js',
+  '/js/talk.js',
+  '/js/content-ie.js',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/apple-touch-icon.png',

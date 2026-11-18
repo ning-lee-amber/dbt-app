@@ -15,6 +15,7 @@ const empty = () => ({
   goals: [],      // 價值觀 → 目標 → 步驟（情緒調節作業單 11、11a、11b）
   mastery: [],    // 建立自我掌控（情緒調節作業單 12、13）
   copeAhead: [],  // 預先因應（情緒調節作業單 12）
+  talks: [],      // 準備一場對話（人際效能作業單 3–7）
   fills: {},      // 講義上的填寫欄 { handoutId: { key: { index: text } } }
   lastExport: null,
 });

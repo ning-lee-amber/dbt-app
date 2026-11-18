@@ -112,6 +112,15 @@ export function tools() {
         rowLink('#/checkin', '每日打卡', 'PLEASE'),
       ),
       card(
+        h('h3', { text: '人際效能' }),
+        rowLink('#/talk/new', '準備一場對話', '目標 → 存錢遊戲 → DEAR MAN 腳本 → 小抄 → 回顧'),
+        rowLink('#/handouts/ie-2a', '人際效能的迷思', '寫下你的挑戰'),
+        rowLink('#/handouts/ie-18', '認可他人', '六個層次'),
+        rowLink('#/handouts/ie-19', '從不被認可中恢復', '不防衛，核對事實'),
+        rowLink('#/talk/new?type=end', '結束關係', '用智慧心決定，安全第一'),
+        rowLink('#/handouts/ie-11a', '小測驗', '講義 11a、12a、13a、16c、18a、19a、22a'),
+      ),
+      card(
         h('h3', { text: '情緒調節' }),
         rowLink('#/opposite', '相反行動', '選情緒 → 看衝動 → 反過來做'),
         rowLink('#/change/new', '改變情緒', '核對事實 → 決定 → 相反行動或問題解決'),
@@ -250,9 +259,26 @@ export function renderBlocks(hid, blocks) {
         flush();
         out.push(...b.items.map(([myth, sample], i) => card(
           h('p', { class: 'myth', text: `${i + 1}. ${myth}` }),
-          h('p', { class: 'muted small', text: `範例挑戰：${sample}` }),
+          sample ? h('p', { class: 'muted small', text: `範例挑戰：${sample}` }) : null,
           h('textarea', { rows: 2, placeholder: '我的挑戰：', value: store.fill(hid, b.key, i),
             oninput: (e) => store.setFill(hid, b.key, i, e.target.value) }))));
+        break;
+      case 'quiz':
+        flush();
+        out.push(...b.items.map((q, i) => {
+          const fb = h('p', { class: 'quiz-fb' });
+          const btns = q.opts.map((o, k) => h('button', {
+            type: 'button', class: 'quiz-opt',
+            onclick: () => {
+              btns.forEach((x, j) => x.classList.toggle('picked', j === k));
+              if (q.ans == null) { fb.textContent = '這一題兩個選項都有道理，原書沒有附答案。'; return; }
+              btns.forEach((x, j) => x.classList.toggle('right', j === q.ans));
+              fb.textContent = k === q.ans ? '✓ 這是比較有效的做法。' : '這是很常見的想法。比較有效的做法是標出來的那一個。';
+            },
+          }, h('b', { text: `${String.fromCharCode(65 + k)}　` }), o));
+          return card(h('p', { class: 'myth', text: `第 ${i + 1} 題` }), btns, fb);
+        }));
+        out.push(h('p', { class: 'muted small', text: '參考答案依講義內容判斷，原書未附答案。' }));
         break;
       case 'table':
         flush();
@@ -380,7 +406,7 @@ export function about() {
         h('p', { text: '這個 APP 是學習和練習 DBT 技巧的輔助工具，不能取代專業的治療。' }),
         h('p', { text: '你填寫的所有內容只存在這支手機上，不會上傳到任何伺服器，也沒有任何追蹤或分析程式。' }),
       ),
-      card(h('p', { class: 'muted small', text: '版本：第三階段（危機生存技巧、情緒調節、了了分明）' })),
+      card(h('p', { class: 'muted small', text: '版本：第四階段（危機生存技巧、情緒調節、了了分明、人際效能）' })),
     ),
   };
 }

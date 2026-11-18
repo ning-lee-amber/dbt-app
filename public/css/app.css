@@ -217,6 +217,31 @@ details.fold[open] summary::after { content: ' ⌄'; }
 .opp-doing .btn { background: var(--accent-ink); color: var(--accent); }
 .opp-doing .btn.ghost { background: transparent; color: var(--accent-ink); border-color: rgba(255,255,255,.5); }
 
+/* interpersonal (phase 4) */
+.pri { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.pri > span { width: 72px; flex: none; }
+.pri .rating { flex: 1; }
+.mq { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.mq:last-child { border-bottom: none; }
+.mq .yn { margin-bottom: 4px; }
+.money { text-align: center; margin: 4px 0 12px; }
+.money p { color: var(--accent); }
+.cheat { background: var(--card); border: 2px solid var(--accent); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
+.cheat-who { color: var(--muted); font-size: 14px; }
+.cheat-strength { color: var(--accent); font-weight: 600; margin: 4px 0 8px; }
+.cue { padding: 10px 0; border-top: 1px solid var(--line); }
+.cue small { color: var(--accent); font-weight: 600; font-size: 12px; }
+.cue p { font-size: 19px; line-height: 1.6; }
+.quiz-opt {
+  display: block; width: 100%; text-align: left; border: 1px solid var(--line); background: transparent; color: var(--ink);
+  border-radius: 12px; padding: 12px; margin: 8px 0; font: inherit; font-size: 15px; cursor: pointer;
+}
+.quiz-opt b { color: var(--muted); }
+.quiz-opt.picked { border-color: var(--muted); }
+.quiz-opt.right { border-color: var(--accent); background: var(--accent-soft); }
+.quiz-fb { color: var(--accent); font-size: 14px; min-height: 20px; }
+.warn.small { font-size: 13px; margin-top: 6px; }
+
 /* handouts */
 details.unit { border-bottom: 1px solid var(--line); }
 details.unit:last-child { border-bottom: none; }
