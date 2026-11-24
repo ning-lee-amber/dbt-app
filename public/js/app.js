@@ -84,3 +84,27 @@ requestPersist();
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
+
+// Auto-update: when you come back to the app, check whether a newer version was deployed.
+// Reload right away on a main tab; on any other page (a form in progress, a running timer)
+// wait until you next go to a main tab so nothing typed is lost.
+const SAFE = /^(#\/(today|records|tools|handouts|me))?$/;
+let version = null;
+let pending = false;
+async function checkVersion() {
+  try {
+    const r = await fetch('/version.json', { cache: 'no-store' });
+    if (!r.ok) return;
+    const { v } = await r.json();
+    if (version === null) { version = v; return; }
+    if (v !== version) {
+      if (SAFE.test(location.hash)) location.reload();
+      else pending = true;
+    }
+  } catch {}
+}
+window.addEventListener('hashchange', () => { if (pending && SAFE.test(location.hash)) location.reload(); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkVersion(); });
+window.addEventListener('pageshow', (e) => { if (e.persisted) checkVersion(); });
+window.addEventListener('focus', checkVersion);
+checkVersion();

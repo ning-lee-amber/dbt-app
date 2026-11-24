@@ -1,6 +1,6 @@
 // Service worker: keeps the app usable offline (crisis tools must open without a connection).
 // Network first, so a new deploy shows up right away when online; cache as the fallback.
-const CACHE = 'dbt-app-v8';
+const CACHE = 'dbt-app-v9';
 const SHELL = [
   '/',
   '/index.html',
@@ -42,6 +42,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  if (new URL(req.url).pathname === '/version.json') return;
   event.respondWith(
     fetch(req)
       .then((res) => {
