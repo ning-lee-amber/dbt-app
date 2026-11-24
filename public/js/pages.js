@@ -1,4 +1,4 @@
-import { h, put, card, pageHead, checkRow, back, todayLabel, fmtDate, confirmBar, toast, slider } from './dom.js';
+import { h, put, card, pageHead, checkRow, back, todayLabel, fmtDate, confirmBar, toast, slider, go } from './dom.js';
 import { UNITS, HANDOUTS, handoutById, ACCEPTS, SENSES, IMPROVE, SOURCE } from './content.js';
 import * as store from './store.js';
 import { todayABC } from './phase3.js';
@@ -190,14 +190,21 @@ export function handout(id) {
   const body = x.blocks
     ? renderBlocks(x.id, x.blocks)
     : [card(h('p', { class: 'muted', text: '這份講義的內容整理中，會在之後的階段加入。' }))];
-  return {
-    tab: 'handouts', title: '',
-    node: h('div', {},
-      back('#/handouts', '講義'),
-      pageHead(x.title, `${x.unitName}講義 ${x.no}`),
-      body,
-      h('p', { class: 'muted small', text: SOURCE })),
-  };
+  const fillable = JSON.stringify(x.blocks || []).match(/"t":"(check|myths)"/);
+  const node = h('div', {},
+    back('#/handouts', '講義'),
+    pageHead(x.title, `${x.unitName}講義 ${x.no}`),
+    body,
+    fillable ? h('button', { class: 'btn block', type: 'button', text: '完成', onclick: () => {
+      // 「其他」欄位打了字但還沒按「新增」的，一併加進去
+      node.querySelectorAll('.addrow').forEach((row) => {
+        if (row.querySelector('input')?.value.trim()) row.querySelector('button')?.click();
+      });
+      toast('已儲存');
+      go('#/handouts');
+    } }) : null,
+    h('p', { class: 'muted small', text: SOURCE }));
+  return { tab: 'handouts', title: '', node };
 }
 
 function checkBlock(hid, b) {

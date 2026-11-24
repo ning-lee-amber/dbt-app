@@ -1,6 +1,6 @@
 // Service worker: keeps the app usable offline (crisis tools must open without a connection).
 // Network first, so a new deploy shows up right away when online; cache as the fallback.
-const CACHE = 'dbt-app-v6';
+const CACHE = 'dbt-app-v7';
 const SHELL = [
   '/',
   '/index.html',
