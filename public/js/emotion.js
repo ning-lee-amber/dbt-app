@@ -1,5 +1,5 @@
 // 情緒調節：情緒紀錄（作業單 2、4a）、每日打卡（作業單 14）、改變情緒流程（作業單 1、5、6、7、8）.
-import { h, put, card, pageHead, back, chips, textField, inputField, yesNo, slider, uid, fmtDate, toast, go, confirmBar } from './dom.js';
+import { h, put, saveButton, card, pageHead, back, chips, textField, inputField, yesNo, slider, uid, fmtDate, toast, go, confirmBar } from './dom.js';
 import { EMOTIONS, OTHER_WORDS, emotionByKey, SHAME_GUILT } from './emotions.js';
 import * as store from './store.js';
 
@@ -166,7 +166,7 @@ export function checkinPage(dateKey) {
         hours,
       ),
       card(h('h3', { text: 'E　適當運動' }), inputField('運動了幾分鐘？（建議每天 20 分鐘）', c.exMin, set('exMin'), { type: 'number', min: 0, inputmode: 'numeric' })),
-      h('p', { class: 'muted small center', text: '填寫後會自動儲存。' }),
+      saveButton('#/today'),
     ),
   };
 }

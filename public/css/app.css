@@ -368,3 +368,11 @@ body.dark .app { padding-top: calc(12px + var(--safe-top)); padding-bottom: calc
 .c-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .c-dot { fill: var(--accent); stroke: var(--card); stroke-width: 2; }
 .c-bar { fill: var(--accent); }
+
+/* iOS: time/date inputs have an intrinsic min width that overflows two-column rows */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.two .field { min-width: 0; }
+input[type=time], input[type=date], input[type=number] {
+  min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; text-align: left; display: block;
+}
+input::-webkit-date-and-time-value { text-align: left; }

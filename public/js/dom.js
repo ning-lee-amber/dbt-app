@@ -117,6 +117,12 @@ export function yesNo(value, onchange, labels = ['是', '否']) {
   return h('div', { class: 'yn' }, btns);
 }
 
+// Save button for pages that already save as you type: blur the field so its last input lands, confirm, go back.
+export const saveButton = (to, label = '儲存') => h('button', { class: 'btn block', type: 'button', text: label, onclick: () => {
+  document.activeElement?.blur?.();
+  setTimeout(() => { toast('已儲存'); go(to); }, 50);
+} });
+
 // Back link.
 export const back = (to, label = '返回') => h('a', { class: 'back', href: to, text: `‹ ${label}` });
 

@@ -1,5 +1,5 @@
 // 第三階段：了了分明練習紀錄、平衡（中庸之道）、正向活動、價值觀 → 目標 → 步驟、ABC（自我掌控、預先因應）.
-import { h, put, card, pageHead, back, chips, textField, inputField, yesNo, slider, uid, fmtDate, toast, go, confirmBar, checkRow } from './dom.js';
+import { h, put, saveButton, card, pageHead, back, chips, textField, inputField, yesNo, slider, uid, fmtDate, toast, go, confirmBar, checkRow } from './dom.js';
 import { MF_SKILLS, MF_EFFECTS, LOVING_EFFECTS, WISE_ANCHORS, LOVING_TARGETS, BALANCE_PAIRS } from './content-mf.js';
 import { POSITIVE_ACTIVITIES, VALUES } from './content-er.js';
 import * as store from './store.js';
@@ -94,7 +94,7 @@ export function balancePage(dateKey) {
         textField('少做：', c.balDoLess, set('balDoLess'), { rows: 2 }),
         textField('多做：', c.balDoMore, set('balDoMore'), { rows: 2 }),
       ),
-      h('p', { class: 'muted small center', text: '填寫後會自動儲存。' }),
+      saveButton('#/tools'),
     ),
   };
 }
@@ -139,6 +139,7 @@ export function positivePage() {
       ) : null,
       recent.length ? card(h('h3', { text: '最近的正向活動' }), recent.map((x) =>
         h('div', { class: 'logrow' }, h('span', { text: `${x.date.slice(5)}　${x.text || ''}` }), h('small', { text: x.done ? `✓ 愉快 ${x.pleasure ?? '—'}` : '未做' })))) : null,
+      saveButton('#/today'),
     );
   };
   draw();
@@ -260,6 +261,7 @@ export function abcPage() {
         yesNo(c.helped, (v) => { c.helped = v; store.saveItem('copeAhead', c); }, ['有', '沒有']),
         h('button', { class: 'btn small ghost', type: 'button', text: '刪除', onclick: () => { store.deleteItem('copeAhead', c.id); draw(); } }),
       )),
+      saveButton('#/today'),
     );
   };
   draw();

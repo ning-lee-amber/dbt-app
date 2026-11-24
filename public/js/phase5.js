@@ -1,5 +1,5 @@
 // 第五階段：鏈鎖分析、遺漏環節分析、辯證式戒癮、趨勢圖表.
-import { h, put, card, pageHead, back, chips, textField, inputField, yesNo, uid, fmtDate, toast, go, confirmBar } from './dom.js';
+import { h, put, saveButton, card, pageHead, back, chips, textField, inputField, yesNo, uid, fmtDate, toast, go, confirmBar } from './dom.js';
 import { VULN_7A, LINK_TYPES, ADDICTIONS } from './content-gd.js';
 import { emotionByKey } from './emotions.js';
 import * as store from './store.js';
@@ -214,7 +214,7 @@ export function soberPage() {
           h('a', { class: 'btn small ghost', href: '#/urge', text: '衝動卡' })),
       ),
       s.relapses.length ? card(h('h3', { text: '紀錄' }), [...s.relapses].reverse().map((r) => h('div', { class: 'logrow' }, h('span', { text: r.date }), h('small', { text: '滑了一下，重新開始' })))) : null,
-      h('p', { class: 'muted small center', text: '填寫後會自動儲存。' }),
+      saveButton('#/tools'),
     );
   };
   draw();
