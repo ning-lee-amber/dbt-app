@@ -1,5 +1,5 @@
 // 準備一場對話（人際效能作業單 3、4、5、6、7）：目標 → 強度（存錢遊戲） → 腳本 → 小抄 → 回顧.
-import { h, put, card, pageHead, back, chips, textField, yesNo, uid, toast, go, confirmBar } from './dom.js';
+import { h, put, card, pageHead, back, chips, textField, yesNo, uid, toast, go, confirmBar, linkify } from './dom.js';
 import { STRENGTH, MONEY_GAME } from './content-ie.js';
 import * as store from './store.js';
 
@@ -95,7 +95,7 @@ export function talkPage(id, type) {
       card(
         h('h3', { text: '這是什麼情境？' }),
         chips(SITUATIONS, t.type, (v) => { t.type = v; if (!t.mode) t.mode = v === 'refuse' ? 'refuse' : 'ask'; draw(); }, { single: true }),
-        t.type === 'end' ? h('div', { class: 'outcome' }, h('b', { text: '結束關係（人際效能講義 13）' }),
+        t.type === 'end' ? h('div', { class: 'outcome' }, h('b', {}, linkify('結束關係（人際效能講義 13）')),
           h('p', { text: '用智慧心做決定，不陷入情緒心。如果關係重要、不是破壞性的、還有改善的希望，先嘗試問題解決。要離開高度虐待或生命被威脅的關係時，請撥 113 求助，並找專業人員協助。' })) : null,
         h('label', { class: 'field' }, h('span', { text: '對象' }), h('input', { type: 'text', value: t.who, placeholder: '例如：媽媽、主管、室友', oninput: (e) => { t.who = e.target.value; } })),
         textField('問題的促發事件：誰對誰做了什麼？哪些部分對我造成困擾？（記住，要核對事實！）', t.event, (v) => { t.event = v; }),

@@ -340,7 +340,7 @@ export function end() {
     sessionStorage.removeItem(SKEY);
     go('#/records/new');
   };
-  const leave = () => { sessionStorage.removeItem(SKEY); go('#/today'); };
+  const leave = () => { sessionStorage.removeItem(SKEY); go('#/opposite'); };
   return view(h('div', { class: 'crisis' },
     h('p', { class: 'crisis-lead' }, '辛苦了。'),
     h('p', { class: 'dtext', text: '要記下這次的經過嗎？寫下發生了什麼、用了哪些技巧，之後就能看出哪些方法對你最有用。' }),

@@ -1,4 +1,4 @@
-import { h, put, card, pageHead, checkRow, back, todayLabel, fmtDate, confirmBar, toast, slider, go } from './dom.js';
+import { h, put, card, pageHead, checkRow, back, fmtDate, confirmBar, toast, go, linkify } from './dom.js';
 import { UNITS, HANDOUTS, handoutById, ACCEPTS, SENSES, IMPROVE, SOURCE } from './content.js';
 import * as store from './store.js';
 import { todayABC } from './phase3.js';
@@ -35,41 +35,19 @@ const rowLink = (to, title, sub, badge) =>
     h('div', {}, h('b', { text: title }), sub ? h('small', { text: sub }) : null),
     badge != null ? h('span', { class: 'badge', text: badge }) : h('span', { class: 'chev', text: '›' }));
 
-// ---------- 今天 ----------
+// ---------- 工具頁上方：ABC 與危機工具（原「今天」頁的內容） ----------
 
-export function today() {
-  const phrases = myPhrases();
-  const phrase = phrases.length ? phrases[Math.floor(Math.random() * phrases.length)] : '「這件事也一樣會過去。」';
+function toolsTop() {
   const { cards, logs } = store.counts();
   const latest = store.crisisLogs()[0];
   const st = store.getState();
   const needBackup = (cards || logs) && (!st.lastExport || Date.now() - new Date(st.lastExport) > 30 * 864e5);
 
-  const key = store.dayKey();
-  const ci = store.checkin(key);
-  const done = (f) => ci[f] != null && ci[f] !== '';
-  const please = [['PL', 'pl'], ['E 飲食', 'eat'], ['A 物質', 'sub'], ['S 睡眠', 'wake'], ['E 運動', 'exMin']];
-
-  return {
-    tab: 'today', title: '',
-    node: h('div', {},
-      pageHead('今天', todayLabel()),
-      card(h('p', { class: 'quote', text: phrase })),
-      h('a', { class: 'opp-cta', href: '#/opposite' }, h('b', { text: '相反行動' }), h('small', { text: '情緒不符合事實，或跟著做沒有幫助時：反過來做' })),
-      card(
-        h('div', { class: 'row' }, h('h3', { text: '每日打卡' }), h('a', { class: 'small', href: '#/checkin', text: '填寫 ›' })),
-        slider(new Date().getHours() < 15 ? '早上的心情' : '晚上的心情', new Date().getHours() < 15 ? ci.moodAM : ci.moodPM,
-          (v) => store.setCheckin(key, new Date().getHours() < 15 ? 'moodAM' : 'moodPM', v)),
-        h('a', { class: 'please', href: '#/checkin' }, please.map(([label, f]) => h('span', { class: done(f) ? 'on' : '', text: label }))),
-      ),
+  return [
       todayABC(rowLink),
       card(
-        h('h3', { text: '情緒' }),
-        rowLink('#/emotion/new', '記錄一個情緒', '選情緒、評強度、寫下發生什麼事'),
-        rowLink('#/change/new', '我想改變一個情緒', '核對事實 → 相反行動或問題解決'),
-      ),
-      card(
         h('h3', { text: '危機時用的工具' }),
+        rowLink('#/crisis', '危機模式', '情緒強烈、快撐不住時'),
         rowLink('#/urge', '我的衝動卡', '衝動來之前先寫好', cards),
         rowLink('#/me/toolbox', '我的工具箱', '轉移注意力、自我撫慰、改善當下'),
         rowLink('#/records/new', '寫一筆危機紀錄', '痛苦耐受作業單 1'),
@@ -85,8 +63,7 @@ export function today() {
         h('a', { class: 'btn ghost', href: '#/me/backup', text: '去備份' }),
       ) : null,
       store.saveFailed ? card(h('p', { class: 'warn', text: '這支手機的瀏覽器目前無法儲存資料（可能是無痕模式）。' })) : null,
-    ),
-  };
+  ];
 }
 
 // ---------- 工具 ----------
@@ -96,6 +73,7 @@ export function tools() {
     tab: 'tools', title: '',
     node: h('div', {},
       pageHead('工具'),
+      toolsTop(),
       card(
         h('h3', { text: '了了分明' }),
         rowLink('#/practice/new', '記錄一次練習', '觀察、描述、參與、不評斷、專一、有效'),
@@ -103,13 +81,6 @@ export function tools() {
         rowLink('#/guide/loving', '仁慈關愛', '從自己開始，擴展到所有眾生'),
         rowLink('#/balance', '行中庸之道', '今天的平衡（蹺蹺板）'),
         rowLink('#/handouts/mf-4a', '練習觀察的方法', '回歸感官'),
-      ),
-      card(
-        h('h3', { text: '減少情緒心的脆弱性（ABC PLEASE）' }),
-        rowLink('#/positive', '今天的一件好事', '累積正向情緒（短期）'),
-        rowLink('#/values', '價值觀與目標', '累積正向情緒（長期）'),
-        rowLink('#/abc', '建立自我掌控與預先因應', 'B 與 C'),
-        rowLink('#/checkin', '每日打卡', 'PLEASE'),
       ),
       card(
         h('h3', { text: '行為分析與戒癮' }),
@@ -243,6 +214,7 @@ const unwrapCard = (el) => {
 };
 
 export function renderBlocks(hid, blocks) {
+  const unit = String(hid).split('-')[0];
   const out = [];
   let loose = null; // consecutive text blocks share one card
   const flush = () => { if (loose) { out.push(loose); loose = null; } };
@@ -250,12 +222,12 @@ export function renderBlocks(hid, blocks) {
 
   for (const b of blocks) {
     switch (b.t) {
-      case 'p': put(h('p', { text: b.text })); break;
+      case 'p': put(h('p', {}, linkify(b.text, unit))); break;
       case 'h': put(h('h3', { text: b.text })); break;
       case 'quote': put(h('p', { class: 'quote', text: b.text })); break;
-      case 'note': put(h('p', { class: 'note', text: b.text })); break;
-      case 'list': put(h('ul', {}, b.items.map((t) => h('li', { text: t })))); break;
-      case 'steps': put(h('ol', {}, b.items.map((t) => h('li', { text: t })))); break;
+      case 'note': put(h('p', { class: 'note' }, linkify(b.text, unit))); break;
+      case 'list': put(h('ul', {}, b.items.map((t) => h('li', {}, linkify(t, unit))))); break;
+      case 'steps': put(h('ol', {}, b.items.map((t) => h('li', {}, linkify(t, unit))))); break;
       case 'link': flush(); out.push(h('a', { class: 'btn block', href: b.to, text: b.label })); break;
       case 'check': flush(); out.push(checkBlock(hid, b)); break;
       case 'acro':

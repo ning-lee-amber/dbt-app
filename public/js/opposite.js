@@ -1,5 +1,5 @@
 // 相反行動專用介面（情緒調節講義 10、11，作業單 7）。存在 changes 集合，標記 quick:true。
-import { h, put, card, pageHead, back, chips, textField, yesNo, slider, uid, toast, go, confirmBar } from './dom.js';
+import { h, put, card, pageHead, back, chips, textField, yesNo, slider, uid, toast, go, confirmBar, linkify } from './dom.js';
 import { EMOTIONS, emotionByKey, SHAME_GUILT } from './emotions.js';
 import * as store from './store.js';
 
@@ -43,7 +43,7 @@ export function oppositePage(id) {
     }
 
     put(root,
-      back('#/today', '今天'),
+      id ? back('#/records', '記錄') : null,
       pageHead('相反行動', '情緒調節講義 10、11・作業單 7'),
       h('p', { class: 'quote', text: '當你的情緒不符合事實\n或者隨著情緒的行動是無效時\n採取相反行動' }),
       card(
@@ -95,7 +95,7 @@ export function oppositePage(id) {
           h('h3', { text: '現在的強度' }),
           slider('強度（0–100）：練習後', c.post, (v) => { c.post = v; post.textContent = v; }),
           h('div', { class: 'compare' }, h('b', { class: 'big', text: c.pre ?? '—' }), h('span', { text: '→' }), post),
-          h('p', { class: 'muted small', text: '情緒還沒改變？相反行動要持續做、做得「完全」，才會見效。也可以做一次疑難排解（情緒調節講義 24）。' }),
+          h('p', { class: 'muted small' }, linkify('情緒還沒改變？相反行動要持續做、做得「完全」，才會見效。也可以做一次疑難排解（情緒調節講義 24）。')),
         ),
         h('button', { class: 'btn block', type: 'button', text: '儲存', onclick: () => { c.status = 'done'; save(); toast('已儲存'); go('#/records'); } }),
       ] : null,

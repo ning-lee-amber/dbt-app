@@ -1,4 +1,5 @@
 // Small DOM helpers. All user text goes through textContent (never innerHTML).
+import { handoutById } from './content.js';
 
 export function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
@@ -52,9 +53,32 @@ export function todayLabel() {
 // A card wrapper.
 export const card = (...children) => h('section', { class: 'card' }, ...children);
 
+// Turn handout references in text (e.g. 「情緒調節講義 10、11」, or 「講義 22」 inside a unit)
+// into links that open that handout. `unit` is the default unit (gen/mf/ie/er/dt) when the text omits it.
+const UNIT_OF = { 通用技巧: 'gen', 通用: 'gen', 了了分明: 'mf', 人際效能: 'ie', 情緒調節: 'er', 痛苦耐受: 'dt' };
+const REF = /(通用技巧|通用|了了分明|人際效能|情緒調節|痛苦耐受)?講義\s*([0-9]+[a-z]?(?:\s*[、–-]\s*[0-9]+[a-z]?)*)/g;
+export function linkify(text, unit) {
+  if (!text || !text.includes('講義')) return text;
+  const out = [];
+  let last = 0;
+  for (const m of text.matchAll(REF)) {
+    const u = m[1] ? UNIT_OF[m[1]] : unit;
+    if (!u) continue;
+    const numsAt = m.index + m[0].length - m[2].length;
+    out.push(text.slice(last, numsAt));
+    for (const part of m[2].split(/(\s*[、–-]\s*)/)) {
+      const ho = /^[0-9]+[a-z]?$/.test(part) && handoutById(`${u}-${part}`);
+      out.push(ho ? h('a', { class: 'hlink', href: `#/handouts/${ho.id}`, text: part }) : part);
+    }
+    last = m.index + m[0].length;
+  }
+  out.push(text.slice(last));
+  return out;
+}
+
 // Page title block.
 export const pageHead = (title, small) =>
-  h('div', { class: 'page-head' }, small ? h('small', { text: small }) : null, h('h1', { text: title }));
+  h('div', { class: 'page-head' }, small ? h('small', {}, linkify(small)) : null, h('h1', { text: title }));
 
 // Checkbox row.
 export function checkRow(label, checked, onchange, extra) {

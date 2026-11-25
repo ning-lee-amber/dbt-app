@@ -10,7 +10,6 @@ import { talkPage } from './talk.js';
 import * as p5 from './phase5.js';
 
 const routes = [
-  [/^#\/today$/, pages.today],
   [/^#\/records$/, forms.records],
   [/^#\/records\/new$/, () => forms.logForm(null)],
   [/^#\/records\/([\w-]+)$/, (m) => forms.logForm(m[1])],
@@ -59,15 +58,21 @@ const routes = [
 const app = document.getElementById('app');
 const titleEl = document.getElementById('topbar-title');
 
+let dirty = false; // something was typed or tapped on this screen
+app.addEventListener('input', () => { dirty = true; });
+app.addEventListener('click', (e) => { if (e.target.closest('button, input, label')) dirty = true; });
+
 function render() {
   runLeave();
-  const hash = location.hash || '#/today';
+  const hash = location.hash || '#/opposite';
+  if (hash === '#/today') { location.replace('#/opposite'); return; } // old home address
+  dirty = false;
   let view = null;
   for (const [re, fn] of routes) {
     const m = hash.match(re);
     if (m) { view = fn(m); break; }
   }
-  if (!view) { location.replace('#/today'); return; }
+  if (!view) { location.replace('#/opposite'); return; }
 
   document.body.classList.toggle('dark', !!view.dark);
   titleEl.textContent = view.title || '';
@@ -76,7 +81,6 @@ function render() {
   window.scrollTo(0, 0);
 }
 
-document.getElementById('sos').addEventListener('click', () => { location.hash = '#/crisis'; });
 window.addEventListener('hashchange', render);
 render();
 requestPersist();
@@ -88,7 +92,8 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 // Auto-update: when you come back to the app, check whether a newer version was deployed.
 // Reload right away on a main tab; on any other page (a form in progress, a running timer)
 // wait until you next go to a main tab so nothing typed is lost.
-const SAFE = /^(#\/(today|records|tools|handouts|me))?$/;
+const MAIN = /^#\/(records|tools|handouts|me)$/;
+const SAFE = { test: (hash) => MAIN.test(hash) || ((hash === '#/opposite' || !hash) && !dirty) };
 let version = null;
 let pending = false;
 async function checkVersion() {

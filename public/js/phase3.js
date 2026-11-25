@@ -112,7 +112,7 @@ export function positivePage() {
   const draw = () => {
     const recent = store.items('positives').filter((x) => x.date !== today()).slice(0, 14);
     put(root,
-      back('#/today', '今天'),
+      back('#/tools', '工具'),
       pageHead('今天的一件好事', '情緒調節講義 15、16・作業單 10'),
       card(
         h('h3', { text: '今天的正向活動計畫' }),
@@ -139,11 +139,11 @@ export function positivePage() {
       ) : null,
       recent.length ? card(h('h3', { text: '最近的正向活動' }), recent.map((x) =>
         h('div', { class: 'logrow' }, h('span', { text: `${x.date.slice(5)}　${x.text || ''}` }), h('small', { text: x.done ? `✓ 愉快 ${x.pleasure ?? '—'}` : '未做' })))) : null,
-      saveButton('#/today'),
+      saveButton('#/tools'),
     );
   };
   draw();
-  return { tab: 'today', title: '', node: root };
+  return { tab: 'tools', title: '', node: root };
 }
 
 // ---------- 價值觀 → 目標 → 步驟（情緒調節講義 17、18，作業單 11、11a、11b） ----------
@@ -167,9 +167,9 @@ export function valuesPage() {
   const byValue = {};
   for (const g of goals) (byValue[g.value || '（未選價值觀）'] ??= []).push(g);
   return {
-    tab: 'today', title: '',
+    tab: 'tools', title: '',
     node: h('div', {},
-      back('#/today', '今天'),
+      back('#/tools', '工具'),
       pageHead('價值觀與目標', '情緒調節講義 17、18・作業單 11'),
       card(h('p', { class: 'muted', text: '確認對你重要的價值觀 → 選一個現在可努力的目標 → 拆成小行動步驟 → 現在就採取一步。' }),
         h('a', { class: 'small', href: '#/handouts/er-18', text: '到價值觀清單勾選對我重要的 ›' })),
@@ -217,7 +217,7 @@ export function goalPage(id) {
     );
   };
   draw();
-  return { tab: 'today', title: '', node: root };
+  return { tab: 'tools', title: '', node: root };
 }
 
 // ---------- ABC：建立自我掌控、預先因應（情緒調節講義 19，作業單 12、13） ----------
@@ -229,7 +229,7 @@ export function abcPage() {
     const copes = store.items('copeAhead');
     const recent = store.items('mastery').filter((x) => x.date !== today()).slice(0, 10);
     put(root,
-      back('#/today', '今天'),
+      back('#/tools', '工具'),
       pageHead('建立自我掌控與預先因應', '情緒調節講義 19・作業單 12'),
       card(
         h('h3', { text: 'B　今天建立自我掌控的活動' }),
@@ -261,11 +261,11 @@ export function abcPage() {
         yesNo(c.helped, (v) => { c.helped = v; store.saveItem('copeAhead', c); }, ['有', '沒有']),
         h('button', { class: 'btn small ghost', type: 'button', text: '刪除', onclick: () => { store.deleteItem('copeAhead', c.id); draw(); } }),
       )),
-      saveButton('#/today'),
+      saveButton('#/tools'),
     );
   };
   draw();
-  return { tab: 'today', title: '', node: root };
+  return { tab: 'tools', title: '', node: root };
 }
 
 // ---------- 給「今天」用的 ABC 卡片 ----------
@@ -274,9 +274,10 @@ export function todayABC(rowLink) {
   const mas = todayItem('mastery');
   const ns = nextStep();
   return card(
-    h('h3', { text: '今天的 ABC' }),
+    h('h3', { text: 'ABC 照顧好情緒' }),
     rowLink('#/positive', '一件好事', pos?.text ? `${pos.done ? '✓ ' : ''}${pos.text}` : '選一件會帶來正向情緒的事'),
-    rowLink('#/abc', '建立自我掌控', mas?.plan ? `${mas.done ? '✓ ' : ''}${mas.plan}` : '做一件困難但可能做到的事'),
+    rowLink('#/abc', '建立自我掌控與預先因應', mas?.plan ? `${mas.done ? '✓ ' : ''}${mas.plan}` : '做一件困難但可能做到的事'),
     rowLink('#/values', '價值觀的下一步', ns ? ns.step.text : '從價值觀展開行動步驟'),
+    rowLink('#/checkin', 'PLEASE 每日打卡', '照顧身體：疾病、飲食、物質、睡眠、運動'),
   );
 }

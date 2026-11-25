@@ -139,9 +139,9 @@ export function checkinPage(dateKey) {
   const label = `${d.getMonth() + 1} 月 ${d.getDate()} 日 星期${'日一二三四五六'[d.getDay()]}`;
 
   return {
-    tab: 'today', title: '',
+    tab: 'tools', title: '',
     node: h('div', {},
-      back('#/today', '今天'),
+      back('#/tools', '工具'),
       h('div', { class: 'daynav' },
         h('a', { href: `#/checkin/${shift(-1)}`, text: '‹ 前一天' }),
         h('span', { text: isToday ? '今天' : label }),
@@ -166,7 +166,7 @@ export function checkinPage(dateKey) {
         hours,
       ),
       card(h('h3', { text: 'E　適當運動' }), inputField('運動了幾分鐘？（建議每天 20 分鐘）', c.exMin, set('exMin'), { type: 'number', min: 0, inputmode: 'numeric' })),
-      saveButton('#/today'),
+      saveButton('#/tools'),
     ),
   };
 }

@@ -33,7 +33,7 @@ h1, h3, h4, p { margin: 0; }
 /* ---------- shell ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center;
-  padding: calc(10px + var(--safe-top)) 16px 10px; background: var(--bg);
+  padding: calc(4px + var(--safe-top)) 16px 4px; background: var(--bg);
 }
 .topbar-title { font-size: 15px; font-weight: 600; }
 .sos {
@@ -376,3 +376,6 @@ input[type=time], input[type=date], input[type=number] {
   min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; text-align: left; display: block;
 }
 input::-webkit-date-and-time-value { text-align: left; }
+
+/* handout reference links inside text */
+.hlink { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
